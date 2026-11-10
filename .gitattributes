@@ -1,0 +1,34 @@
+# 统一换行符：仓库内一律存 LF，检出时按下方规则转换，避免 Windows/Linux 混用导致 diff 全文件变更
+* text=auto eol=lf
+
+# 文本文件显式声明
+*.md      text eol=lf
+*.txt     text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.json    text eol=lf
+*.toml    text eol=lf
+*.sh      text eol=lf
+
+# Windows 专用脚本保留 CRLF，否则 cmd 可能无法执行
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+*.ps1     text eol=crlf
+
+# 二进制文件：禁止文本转换与 diff，防止被当作文本比较而产生乱码 diff
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.webp    binary
+*.ico     binary
+*.pdf     binary
+*.zip     binary
+*.tar     binary
+*.gz      binary
+*.tgz     binary
+*.7z      binary
+*.rar     binary
+*.docx    binary
+*.xlsx    binary
+*.pptx    binary
