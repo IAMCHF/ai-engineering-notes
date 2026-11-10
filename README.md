@@ -13,6 +13,7 @@
 | [docs/00-master-plan.md](docs/00-master-plan.md) | **主文档**：原规划评估、五条结构性判断、**年包目标与深圳目标公司清单**、架构、16 周排期、DoD 与评测设计、风险登记册 |
 | [docs/00-original-plan.md](docs/00-original-plan.md) | 原规划原文留存（外部 Agent 产出，未删改），用于对照 |
 | [docs/02-mcp-open-source.md](docs/02-mcp-open-source.md) | **MCP 公开化方案**：法律前置、泄漏面清单、原版脱敏 vs 机制复刻、三周计划、发布 checklist |
+| [docs/03-skillscan.md](docs/03-skillscan.md) | **案例 B**：SkillScan TRACE（个人项目，可公开）——价值定位、P0–P3 优化清单、评测一致性方案、开源前确认项 |
 | [docs/internal/README.md](docs/internal/README.md) | 内网项目脱敏归档模板 + 已归档索引 |
 | [docs/internal/01-内网建站MCP.md](docs/internal/01-内网建站MCP.md) | **案例 A**：内网建站 MCP（1.4 万行 / 70 模块 / 161 次提交）的架构、三个关键决策、追问预演 |
 
