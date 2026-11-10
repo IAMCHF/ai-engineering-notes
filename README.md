@@ -1,60 +1,25 @@
 # ai-engineering-notes
 
-**求职冲刺期的项目规划与技术复盘笔记。** 目标：211 本硕 + 1.5 年（现薪 17k×12 ≈ 20.4w）→ **深圳 · 互联网 AI 应用/Agent 平台**，**年包 34–42w**；用可验证的开源作品补足"内网项目拿不出来"的短板。
+求职冲刺期的文档仓。目标：**深圳 · 互联网 AI 应用 / Agent 平台 · 双休 · 年包 ≥ 34w**（现薪 17k×12 ≈ 20.4w），投递定在 2027-02。
 
-当前进度：**规划已定稿（v0.3），待开工（W0）** —— 三档方案已选定"目标版"，周期 16 周。
-
----
-
-## 文档索引
+## 索引
 
 | 文档 | 内容 |
 |---|---|
-| [docs/00-master-plan.md](docs/00-master-plan.md) | **主文档**：原规划评估、五条结构性判断、**年包目标与深圳目标公司清单**、架构、16 周排期、DoD 与评测设计、风险登记册 |
-| [docs/00-original-plan.md](docs/00-original-plan.md) | 原规划原文留存（外部 Agent 产出，未删改），用于对照 |
-| [docs/02-mcp-open-source.md](docs/02-mcp-open-source.md) | **MCP 公开化方案**：法律前置、泄漏面清单、原版脱敏 vs 机制复刻、三周计划、发布 checklist |
-| [docs/03-skillscan.md](docs/03-skillscan.md) | **案例 B**：SkillScan TRACE（个人项目，可公开）——价值定位、P0–P3 优化清单、评测一致性方案、开源前确认项 |
-| [docs/03-skillscan-tasks.md](docs/03-skillscan-tasks.md) | **SkillScan 待办清单**：A 必修 / B 测试与一致性 / C 工程化 / D 结构 / E 公开前，含工时与验收 |
-| [docs/internal/README.md](docs/internal/README.md) | 内网项目脱敏归档模板 + 已归档索引 |
-| [docs/internal/01-内网建站MCP.md](docs/internal/01-内网建站MCP.md) | **案例 A**：内网建站 MCP（1.4 万行 / 70 模块 / 161 次提交）的架构、三个关键决策、追问预演 |
+| [docs/00-master-plan.md](docs/00-master-plan.md) | **主规划**：目标与薪资换算、公司池、架构、16 周排期、评测设计、风险与求职清单 |
+| [docs/00-original-plan.md](docs/00-original-plan.md) | 原规划原文（外部 Agent 产出，未删改），仅作对照 |
+| [docs/02-mcp-open-source.md](docs/02-mcp-open-source.md) | MCP 公开化：机制复刻方案、泄漏面、三周计划、发布 checklist |
+| [docs/03-skillscan.md](docs/03-skillscan.md) | 案例 B 评估：SkillScan TRACE 的价值、问题分级、一致性方案 |
+| [docs/03-skillscan-tasks.md](docs/03-skillscan-tasks.md) | 案例 B 待办清单（A 必修 / B 评测 / C 工程化 / D 结构 / E 公开前） |
+| [docs/internal/README.md](docs/internal/README.md) | 内网项目脱敏归档模板与红线 |
+| [docs/internal/01-内网建站MCP.md](docs/internal/01-内网建站MCP.md) | 案例 A：内网建站 MCP 的架构、三个关键决策、追问预演 |
 
----
+## 当前状态
 
-## 三句话概括这份规划
+- 规划 **v0.8 已定稿**（精简版），W1 开工日 2026-11-16，正式投递 W15（2027-02-22）。
+- 案例 A 已归档，待补"踩过的坑"（§7）。
+- 案例 B 清单已交付，自行推进。
 
-1. **一个内核，三种出口**：Agent 图 + 工具层 + 记忆层做一次，分别暴露成 HTTP/SSE、MCP、Eval CLI——而不是三个互不相干的 demo。
-2. **差异化在评测，不在 MCP**：4 臂对比（单 prompt / ReAct / 原生 FC / 自研图）× 30 条分层用例 × 故障注入，加上 RAG 的 36 组消融——这是别人不会做的部分。
-3. **真杠杆是内网经验**：开源仓库证明"能独立交付到什么标准"，脱敏案例证明"在真实约束下取舍过什么"。
+## 约定
 
----
-
-## 进度看板
-
-| 阶段 | 周 | 产出 | 状态 |
-|---|---|---|---|
-| P0 骨架 | W1 | LLM 网关 / SSE / trace / eval harness / CI | ⬜ 未开始 |
-| P1 Agent v1 | W2–W4 | 图 + 3 工具 + 12 条评测 → **可投版** | ⬜ |
-| P2 Agent v2 | W5–W7 | 记忆 / 降级 / 故障注入 / 30 条评测 → **正式投递** | ⬜ |
-| P3 RAG 评测 | W8–W10 | 50 query + 36 组 + 报告，接入 Agent | ⬜ |
-| P4 MCP 化 | W11–W12 | stdio + Streamable HTTP + 鉴权/限流/审计 | ⬜ |
-| P5 收口 | W13–W14 | README 终稿 / 2 篇博客 / 简历定稿 | ⬜ |
-| Buffer | W15–W16 | 面试冲刺 | ⬜ |
-
-> 开工日若变动，排期整体平移；**连续两周投入 < 6h 则降档到"最低可投版"**（见主文档 §6.1）。
-
----
-
-## 重要技术提醒
-
-原规划里这几个点会掉分，已在新方案中修正：
-
-- **MCP 的 HTTP+SSE 传输已废弃**（自 `2025-03-26`），现行是 **Streamable HTTP**；`2026-07-28` 修订移除了 GET 流与协议级 session。写 SSE 等于告诉面试官"你看的是旧资料"。
-- **FastMCP 已到 v3**，v2 写法大量弃用，必须 pin 版本。
-- **LangGraph 的 checkpointer / store API 变动过**，锁版本并保留 `make eval` 回归。
-
----
-
-## 工作方式
-
-- 本仓库只放文档，不放项目代码（三个项目各自独立仓库）。
-- 修改后自动提交；删除 / 合并 / 同步等破坏性操作由本人确认。
+见 [AGENTS.md](AGENTS.md)：只放文档、自动提交、内网代码只复刻不搬原版。
