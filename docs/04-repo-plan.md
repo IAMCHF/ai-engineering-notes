@@ -1,6 +1,6 @@
 # 仓库规划与 P0 骨架
 
-> 状态：2026-11-11 建立。对应主规划 [§6 排期](00-master-plan.md)。
+> 状态：2026-11-11 建立；**P0 已于同日执行完毕并通过 Gate 0**（见 §6）。对应主规划 [§6 排期](00-master-plan.md)。
 
 ---
 
@@ -96,9 +96,41 @@ mcp-replica/
 
 ## 5. Gate 0（P0 完成标准）
 
-- [ ] `make install && make demo` 在干净环境一次通过
-- [ ] `curl -N` 能看到 thinking / tool_call / tool_result / answer 四类 SSE 事件
-- [ ] 不配 `LLM_API_KEY` 启动即失败，报错明确指出缺哪个变量
-- [ ] 主模型故障时自动切备用，日志与 trace 都留痕
-- [ ] `make test` 全绿（≥ 6 条）
-- [ ] 2 条 ADR 已写
+- [x] `make install && make demo` 在干净环境一次通过
+- [x] `curl -N` 能看到 thinking / tool_call / tool_result / answer 四类 SSE 事件
+- [x] 不配 `LLM_API_KEY` 启动即失败，报错明确指出缺哪个变量
+- [x] 主模型故障时自动切备用，日志与 trace 都留痕
+- [x] `make test` 全绿（≥ 6 条）
+- [x] 2 条 ADR 已写（实写 5 条）
+
+---
+
+## 6. P0 执行记录（2026-11-11）
+
+### 结果
+
+| 项 | 实测 |
+|---|---|
+| 单测 | **28 条全绿**（config 4 / gateway 8 / sse 5 / trace 5 / app 4 + 参数化） |
+| 端到端 | `/health` 返回 ok；`/chat` 依次输出 thinking → tool_call → tool_result → answer + 心跳行 |
+| 观测 | `traces/*.jsonl` 四行，含 `prompt_tokens / completion_tokens / cost_yuan / latency_ms` |
+| 故障切换 | 主模型指向死端口，自动切备用，`fallback_used=true`，trace 记录 `fallback=True` |
+| 启动校验 | 缺 `LLM_PRIMARY_*` 时启动失败，报错点名缺失的环境变量 |
+
+### 过程中发现并修掉的真问题
+
+**httpx 与 `NO_PROXY` 的 IPv6 写法冲突（已记 ADR-005）**
+
+- 现象：服务起来了、`/health` 正常，但 `/chat` 只输出前三个事件，`answer` 静默消失。
+- 根因：本机 `NO_PROXY` 含 `[::1]`；`httpx.AsyncClient()` 初始化时把它当 URL pattern 解析，抛
+  `InvalidURL: Invalid port: ':1]'`，异常在流式生成器里未被捕获，直接把连接掐断。
+- 修法：网关默认 `trust_env=False`，新增 `HTTPX_TRUST_ENV` 开关。
+- **测试为何没抓到**：所有网关测试都用 `MockTransport`，而传入 transport 时 httpx 会跳过环境代理解析——
+  测试替身用得太彻底，等于没测生产路径。补了一条 spy 测试专门盯 `trust_env` 参数。
+
+### 遗留与下一步
+
+- `mcp-replica` 仍是空仓（按约定 W11 开工）。
+- 真实平台的 `make install` 需要在用户机器上跑一次（本次验证用的是隔离依赖目录）。
+- P1 起：图状态机（intent/plan/exec/reflect/replan/fallback）+ 工具层 + 12 条评测。
+
